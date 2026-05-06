@@ -60,7 +60,7 @@ public class ExpenseManager {
         System.out.println("  ✔ Expense added: " + expense.getSummary());
 
         // Check the budget for this category if one was set
-        String cat = expense.getCategory();
+        String cat = expense.getCategory().toLowerCase();
         if (budgets.containsKey(cat)) {
             Budget budget = budgets.get(cat);
             budget.addSpent(expense.getAmount());
@@ -144,7 +144,7 @@ public class ExpenseManager {
     public List<Expense> filterByMonth(int month, int year) {
         List<Expense> result = new ArrayList<>();
         for (Expense e : expenses) {
-            LocalDate d = e.getDate();
+            LocalDate d = LocalDate.parse(e.getDate());
             if (d.getMonthValue() == month && d.getYear() == year) {
                 result.add(e);
             }
@@ -300,7 +300,7 @@ public class ExpenseManager {
     private Expense findById(String id) throws ExpenseNotFoundException {
         String target = id.trim(); // String.trim() to remove accidental whitespace
         for (Expense e : expenses) {
-            if (e.getId().equals(target)) {
+            if (String.valueOf(e.getId()).equals(target)) {
                 return e;
             }
         }

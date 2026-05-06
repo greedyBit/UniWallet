@@ -3,95 +3,160 @@ package model;
 import exceptions.InvalidAmountException;
 
 /**
- * TransportExpense - Dépense de transport.
- * 
- * Les limites sont définies par l'utilisateur pour chaque mode de transport.
- * 
- * @author Membre 1
+ * TransportExpense - transport expense.
  */
 public class TransportExpense extends Expense {
-    
-    // Attributs spécifiques
-    private String transportMode;  // Bus, Train, Taxi, Metro, Fuel, Bike
-    private double distanceKm;
-    
-    // Limites configurables par mode de transport (statiques)
-    private static double taxiLimit = 300;   // Par défaut 300 MAD
-    private static double fuelLimit = 600;   // Par défaut 600 MAD
-    private static double generalLimit = 1000; // Pour tous les autres modes
-    
+
+    private String transportMode;
+    private static double taxiLimit = 300;
+    private static double fuelLimit = 600;
+    private static double publicTransportLimit = 50;
+    private static double otherLimit = 200;
+
+    /**
+     * Creates a transport expense.
+     */
     public TransportExpense(int id, double amount, String date, String description,
-                            String category, String transportMode, double distanceKm) {
+                            String category, String transportMode) {
         super(id, amount, date, description, category);
         this.transportMode = transportMode;
-        this.distanceKm = distanceKm;
     }
-    
-    // Getters/Setters
-    public String getTransportMode() { return transportMode; }
-    public double getDistanceKm() { return distanceKm; }
-    public void setTransportMode(String transportMode) { this.transportMode = transportMode; }
-    public void setDistanceKm(double distanceKm) { this.distanceKm = distanceKm; }
-    
-    // Setters pour les limites (appelés par l'utilisateur via ExpenseManager)
-    public static void setTaxiLimit(double limit) { if (limit > 0) taxiLimit = limit; }
-    public static void setFuelLimit(double limit) { if (limit > 0) fuelLimit = limit; }
-    public static void setGeneralLimit(double limit) { if (limit > 0) generalLimit = limit; }
-    
-    // Getters pour les limites
+
+    /**
+     * Returns the transport mode.
+     */
+    public String getTransportMode() {
+        return transportMode;
+    }
+
+    /**
+     * Updates the transport mode.
+     */
+    public void setTransportMode(String transportMode) {
+        this.transportMode = transportMode;
+    }
+
+    /**
+     * Sets the taxi/VTC limit.
+     */
+    public static void setTaxiLimit(double limit) {
+        if (limit > 0) {
+            taxiLimit = limit;
+            System.out.println("OK: taxi/VTC limit set to " + limit + " MAD");
+        }
+    }
+
+    /**
+     * Sets the fuel limit.
+     */
+    public static void setFuelLimit(double limit) {
+        if (limit > 0) {
+            fuelLimit = limit;
+            System.out.println("OK: fuel limit set to " + limit + " MAD");
+        }
+    }
+
+    /**
+     * Sets the public transport limit.
+     */
+    public static void setPublicTransportLimit(double limit) {
+        if (limit > 0) {
+            publicTransportLimit = limit;
+            System.out.println("OK: public transport limit set to " + limit + " MAD");
+        }
+    }
+
+    /**
+     * Sets the other transport limit.
+     */
+    public static void setOtherLimit(double limit) {
+        if (limit > 0) {
+            otherLimit = limit;
+            System.out.println("OK: other transport limit set to " + limit + " MAD");
+        }
+    }
+
+    /**
+     * Returns the taxi/VTC limit.
+     */
     public static double getTaxiLimit() { return taxiLimit; }
+
+    /**
+     * Returns the fuel limit.
+     */
     public static double getFuelLimit() { return fuelLimit; }
-    public static double getGeneralLimit() { return generalLimit; }
-    
+
+    /**
+     * Returns the public transport limit.
+     */
+    public static double getPublicTransportLimit() { return publicTransportLimit; }
+
+    /**
+     * Returns the other transport limit.
+     */
+    public static double getOtherLimit() { return otherLimit; }
+
+    /**
+     * Validates the expense.
+     */
     @Override
     public void validate() throws InvalidAmountException {
         if (amount <= 0) {
-            throw new InvalidAmountException("Le montant doit être positif. Reçu: " + amount);
+            throw new InvalidAmountException("The amount must be positive. Got: " + amount);
         }
-        
-        // Validation selon le mode de transport avec limites configurables
-        switch (transportMode.toLowerCase()) {
-            case "taxi":
-                if (amount > taxiLimit) {
-                    throw new InvalidAmountException(
-                        String.format("Taxi trop cher ! %.2f MAD > limite de %.2f MAD", 
-                            amount, taxiLimit)
-                    );
-                }
-                break;
-                
-            case "fuel":
-            case "essence":
-                if (amount > fuelLimit) {
-                    throw new InvalidAmountException(
-                        String.format("Essence trop chère ! %.2f MAD > limite de %.2f MAD",
-                            amount, fuelLimit)
-                    );
-                }
-                break;
-                
-            default:
-                if (amount > generalLimit) {
-                    throw new InvalidAmountException(
-                        String.format("Dépense transport trop élevée ! %.2f MAD > limite de %.2f MAD",
-                            amount, generalLimit)
-                    );
-                }
-                break;
+
+        if (transportMode == null || transportMode.trim().isEmpty()) {
+            throw new InvalidAmountException("Please specify a transport mode.");
+        }
+
+        String mode = transportMode.toLowerCase();
+        double limit = getLimitForMode(mode);
+
+        if (amount > limit) {
+            throw new InvalidAmountException(
+                String.format("Transport expense too high! %.2f MAD > limit of %.2f MAD", amount, limit)
+            );
         }
     }
-    
+
+    /**
+     * Returns the configured limit for a mode.
+     */
+    private double getLimitForMode(String mode) {
+        switch (mode) {
+            case "taxi":
+            case "vtc":
+                return taxiLimit;
+            case "fuel":
+            case "essence":
+                return fuelLimit;
+            case "bus":
+            case "metro":
+            case "tram":
+            case "tramway":
+                return publicTransportLimit;
+            default:
+                return otherLimit;
+        }
+    }
+
+    /**
+     * Returns a readable summary.
+     */
     @Override
     public String getSummary() {
         return String.format(
-            "[TRANSPORT] %s - %.2f MAD le %s en %s (%.1f km)",
-            description, amount, date, transportMode, distanceKm
+            "[TRANSPORT] %s - %.2f MAD le %s (%s)",
+            description, amount, date, transportMode
         );
     }
-    
+
+    /**
+     * Converts the expense to CSV.
+     */
     @Override
     public String toCSV() {
-        return String.format("%d,TRANSPORT,%.2f,%s,%s,%s,%s,%.2f",
-            id, amount, date, description, category, transportMode, distanceKm);
+        return String.format("%d,TRANSPORT,%.2f,%s,%s,%s,%s",
+            id, amount, date, description, category, transportMode);
     }
 }

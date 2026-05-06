@@ -3,77 +3,96 @@ package model;
 import exceptions.InvalidAmountException;
 
 /**
- * FoodExpense - Dépense de nourriture.
- * 
- * La limite maximale est définie par l'utilisateur via ExpenseManager.
- * 
- * @author Membre 1
+ * FoodExpense - food expense.
  */
 public class FoodExpense extends Expense {
-    
-    // Attributs spécifiques
-    private String mealType;      // Breakfast, Lunch, Dinner, Snack
-    private boolean isRestaurant; // true = restaurant, false = supermarché
-    
-    // Attribut STATIQUE pour la limite (partagée par TOUTES les FoodExpense)
-    private static double maxLimit = 500; // Valeur par défaut, modifiable par l'utilisateur
-    
+
+    private String mealType;
+    private boolean isRestaurant;
+    private static double maxLimit = 500;
+
+    /**
+     * Creates a food expense.
+     */
     public FoodExpense(int id, double amount, String date, String description,
                        String category, String mealType, boolean isRestaurant) {
         super(id, amount, date, description, category);
         this.mealType = mealType;
         this.isRestaurant = isRestaurant;
     }
-    
-    // Getters/Setters spécifiques
-    public String getMealType() { return mealType; }
-    public boolean isRestaurant() { return isRestaurant; }
-    public void setMealType(String mealType) { this.mealType = mealType; }
-    public void setRestaurant(boolean isRestaurant) { this.isRestaurant = isRestaurant; }
-    
+
     /**
-     * Définit la limite maximale pour TOUTES les dépenses de nourriture
-     * @param limit Nouvelle limite en MAD
+     * Returns the meal type.
+     */
+    public String getMealType() { return mealType; }
+
+    /**
+     * Returns whether the expense happened at a restaurant.
+     */
+    public boolean isRestaurant() { return isRestaurant; }
+
+    /**
+     * Updates the meal type.
+     */
+    public void setMealType(String mealType) { this.mealType = mealType; }
+
+    /**
+     * Updates the restaurant flag.
+     */
+    public void setRestaurant(boolean isRestaurant) { this.isRestaurant = isRestaurant; }
+
+    /**
+     * Sets the shared food limit.
      */
     public static void setMaxLimit(double limit) {
         if (limit > 0) {
             maxLimit = limit;
+            System.out.println("OK: food limit set to " + limit + " MAD");
         }
     }
-    
+
     /**
-     * Retourne la limite maximale actuelle
+     * Returns the shared food limit.
      */
     public static double getMaxLimit() {
         return maxLimit;
     }
-    
+
+    /**
+     * Validates the expense amount and meal type.
+     */
     @Override
     public void validate() throws InvalidAmountException {
         if (amount <= 0) {
-            throw new InvalidAmountException(
-                "Le montant doit être positif. Reçu: " + amount
-            );
+            throw new InvalidAmountException("The amount must be positive. Got: " + amount);
         }
-        
-        // Utilise la limite définie par l'utilisateur
+
+        if (mealType == null || mealType.trim().isEmpty()) {
+            throw new InvalidAmountException("Please specify a meal type.");
+        }
+
         if (amount > maxLimit) {
             throw new InvalidAmountException(
-                String.format("Dépense nourriture trop élevée ! %.2f MAD > limite de %.2f MAD",
-                    amount, maxLimit)
+                String.format("Food expense too high! %.2f MAD > limit of %.2f MAD", amount, maxLimit)
             );
         }
     }
-    
+
+    /**
+     * Returns a readable summary.
+     */
     @Override
     public String getSummary() {
-        String location = isRestaurant ? "Restaurant" : "Supermarché";
+        String location = isRestaurant ? "Restaurant" : "Supermarche";
         return String.format(
             "[NOURRITURE] %s - %.2f MAD le %s (%s) - %s",
             description, amount, date, location, mealType
         );
     }
-    
+
+    /**
+     * Converts the expense to CSV.
+     */
     @Override
     public String toCSV() {
         return String.format("%d,FOOD,%.2f,%s,%s,%s,%s,%b",
