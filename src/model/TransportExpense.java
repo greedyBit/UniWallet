@@ -2,103 +2,61 @@ package model;
 
 import exceptions.InvalidAmountException;
 
-/**
- * TransportExpense - transport expense.
- */
 public class TransportExpense extends Expense {
-
+    // les attributs
     private String transportMode;
     private static double taxiLimit = 300;
     private static double fuelLimit = 600;
     private static double publicTransportLimit = 50;
     private static double otherLimit = 200;
 
-    /**
-     * Creates a transport expense.
-     */
-    public TransportExpense(int id, double amount, String date, String description,
-                            String category, String transportMode) {
+    //Constructeur
+    public TransportExpense(int id, double amount, String date, String description,String category, String transportMode) {
         super(id, amount, date, description, category);
         this.transportMode = transportMode;
     }
 
-    /**
-     * Returns the transport mode.
-     */
+    //Getters & Setters
     public String getTransportMode() {
         return transportMode;
     }
-
-    /**
-     * Updates the transport mode.
-     */
     public void setTransportMode(String transportMode) {
         this.transportMode = transportMode;
     }
 
-    /**
-     * Sets the taxi/VTC limit.
-     */
+    public static double getTaxiLimit() { return taxiLimit; }
     public static void setTaxiLimit(double limit) {
         if (limit > 0) {
             taxiLimit = limit;
-            System.out.println("OK: taxi/VTC limit set to " + limit + " MAD");
+            System.out.println("OK: taxi/VTC limite a " + limit + " MAD");
         }
     }
 
-    /**
-     * Sets the fuel limit.
-     */
+    public static double getFuelLimit() { return fuelLimit; }
     public static void setFuelLimit(double limit) {
         if (limit > 0) {
             fuelLimit = limit;
-            System.out.println("OK: fuel limit set to " + limit + " MAD");
+            System.out.println("OK: Carburant limite a " + limit + " MAD");
         }
     }
 
-    /**
-     * Sets the public transport limit.
-     */
+    public static double getPublicTransportLimit() { return publicTransportLimit; }
     public static void setPublicTransportLimit(double limit) {
         if (limit > 0) {
             publicTransportLimit = limit;
-            System.out.println("OK: public transport limit set to " + limit + " MAD");
+            System.out.println("OK: transport publique limite a " + limit + " MAD");
         }
     }
 
-    /**
-     * Sets the other transport limit.
-     */
+    public static double getOtherLimit() { return otherLimit; }
     public static void setOtherLimit(double limit) {
         if (limit > 0) {
             otherLimit = limit;
-            System.out.println("OK: other transport limit set to " + limit + " MAD");
+            System.out.println("OK: autre transport limite a " + limit + " MAD");
         }
     }
 
-    /**
-     * Returns the taxi/VTC limit.
-     */
-    public static double getTaxiLimit() { return taxiLimit; }
-
-    /**
-     * Returns the fuel limit.
-     */
-    public static double getFuelLimit() { return fuelLimit; }
-
-    /**
-     * Returns the public transport limit.
-     */
-    public static double getPublicTransportLimit() { return publicTransportLimit; }
-
-    /**
-     * Returns the other transport limit.
-     */
-    public static double getOtherLimit() { return otherLimit; }
-
-    /**
-     * Validates the expense.
-     */
+    //Validation depense
     @Override
     public void validate() throws InvalidAmountException {
         if (amount <= 0) {
@@ -119,9 +77,7 @@ public class TransportExpense extends Expense {
         }
     }
 
-    /**
-     * Returns the configured limit for a mode.
-     */
+    //Retourne limit ~ Mode
     private double getLimitForMode(String mode) {
         switch (mode) {
             case "taxi":
@@ -140,9 +96,7 @@ public class TransportExpense extends Expense {
         }
     }
 
-    /**
-     * Returns a readable summary.
-     */
+    //Resume
     @Override
     public String getSummary() {
         return String.format(
@@ -151,9 +105,7 @@ public class TransportExpense extends Expense {
         );
     }
 
-    /**
-     * Converts the expense to CSV.
-     */
+    //Serialisation - commun entre les classes
     @Override
     public String toCSV() {
         return String.format("%d,TRANSPORT,%.2f,%s,%s,%s,%s",
