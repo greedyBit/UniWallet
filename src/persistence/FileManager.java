@@ -21,16 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Gère la persistance CSV des étudiants, budgets et dépenses.
- * Concept : séparation des responsabilités entre logique métier et I/O.
- */
 public class FileManager {
 
-    /**
-     * Sauvegarde une liste de dépenses dans un fichier CSV.
-     * Concept : itération explicite sur une collection et écriture séquentielle.
-     */
+    //Sauvegarde une liste de dépenses dans un fichier CSV.
     public void saveExpenses(List<Expense> expenses, String path) throws FileIOException {
         List<Expense> safeExpenses = expenses == null ? new ArrayList<Expense>() : expenses;
         File file = new File(path);
@@ -45,17 +38,13 @@ public class FileManager {
         }
     }
 
-    /**
-     * Charge une liste de dépenses depuis un fichier CSV.
-     * Concept : désérialisation polymorphique selon le type concret.
-     */
+    //Charge une liste de dépenses depuis un fichier CSV.
     public List<Expense> loadExpenses(String path) throws FileIOException {
         List<Expense> expenses = new ArrayList<>();
         File file = new File(path);
         if (!file.exists() || !file.isFile()) {
             return expenses;
         }
-
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -63,7 +52,6 @@ public class FileManager {
                 if (line.isEmpty()) {
                     continue;
                 }
-
                 try {
                     String[] parts = line.split(",");
                     String type = parts[1].trim().toUpperCase();
@@ -120,10 +108,7 @@ public class FileManager {
         return expenses;
     }
 
-    /**
-     * Sauvegarde une carte de budgets dans un fichier CSV.
-     * Concept : parcours de Map via entrySet() et persistance texte.
-     */
+    //Sauvegarde une carte de budgets dans un fichier CSV.
     public void saveBudgets(Map<String, Budget> budgets, String path) throws FileIOException {
         Map<String, Budget> safeBudgets = budgets == null ? new HashMap<String, Budget>() : budgets;
         File file = new File(path);
@@ -138,10 +123,7 @@ public class FileManager {
         }
     }
 
-    /**
-     * Charge une carte de budgets depuis un fichier CSV.
-     * Concept : fabrique statique et clé normalisée en minuscules.
-     */
+    //Charge une carte de budgets depuis un fichier CSV.
     public Map<String, Budget> loadBudgets(String path) throws FileIOException {
         Map<String, Budget> budgets = new HashMap<>();
         File file = new File(path);
@@ -171,10 +153,7 @@ public class FileManager {
         return budgets;
     }
 
-    /**
-     * Sauvegarde un étudiant dans un fichier CSV.
-     * Concept : sérialisation simple d’un objet unique.
-     */
+    //Sauvegarde un étudiant dans un fichier CSV.
     public void saveStudent(Student student, String path) throws FileIOException {
         File file = new File(path);
         ensureParentDirectory(file);
@@ -184,14 +163,11 @@ public class FileManager {
                 writer.println(student.toCSV());
             }
         } catch (IOException e) {
-            throw new FileIOException("Impossible de sauvegarder l’étudiant dans : " + path, e);
+            throw new FileIOException("Impossible de sauvegarder l’etudiant dans : " + path, e);
         }
     }
 
-    /**
-     * Charge un étudiant depuis un fichier CSV.
-     * Concept : lecture d’un enregistrement unique avec fabrique statique.
-     */
+    //Charge un étudiant depuis un fichier CSV.
     public Student loadStudent(String path) throws FileIOException {
         File file = new File(path);
         if (!file.exists() || !file.isFile()) {
@@ -205,16 +181,13 @@ public class FileManager {
             }
             return Student.fromCSV(line.trim());
         } catch (IOException e) {
-            throw new FileIOException("Impossible de lire l’étudiant depuis : " + path, e);
+            throw new FileIOException("Impossible de lire l’etudiant depuis : " + path, e);
         } catch (RuntimeException ex) {
             throw new FileIOException("Ligne CSV étudiante invalide dans : " + path, ex);
         }
     }
 
-    /**
-     * Crée le dossier parent si nécessaire avant l’écriture.
-     * Concept : aide utilitaire liée à l’I/O du système de fichiers.
-     */
+    //Crée le dossier parent si necessaire avant l’ecriture.
     private void ensureParentDirectory(File file) {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
