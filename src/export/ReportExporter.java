@@ -13,26 +13,16 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Génère des rapports mensuels à partir du gestionnaire de dépenses.
- * Concept : composition, car le service réutilise ExpenseManager sans l’hériter.
- */
 public class ReportExporter implements Exportable {
-
+    //les attributs
     private final ExpenseManager manager;
 
-    /**
-     * Injecte le gestionnaire de dépenses utilisé pour construire les rapports.
-     * Concept : injection de dépendance via constructeur.
-     */
+    //Constructeur
     public ReportExporter(ExpenseManager manager) {
         this.manager = manager;
     }
 
-    /**
-     * Exporte toutes les dépenses du gestionnaire dans un fichier texte formaté.
-     * Concept : implémentation d’une interface métier d’export.
-     */
+    //Exporte toutes les dépenses du gestionnaire dans un fichier texte formaté.
     @Override
     public void exportToFile(String path) throws FileIOException {
         File file = new File(path);
@@ -45,19 +35,13 @@ public class ReportExporter implements Exportable {
         }
     }
 
-    /**
-     * Formate une dépense sur une ligne alignée.
-     * Concept : String.format() pour un affichage tabulaire lisible.
-     */
+    //Formate une dépense sur une ligne alignée.
     public String formatRow(Expense e) {
         return String.format("%-5d %-12s %-15s %-25s %10.2f MAD",
                 e.getId(), e.getDate(), e.getCategory(), e.getDescription(), e.getAmount());
     }
 
-    /**
-     * Génère un rapport limité à un mois précis dans un fichier dédié.
-     * Concept : filtrage métier avant sérialisation du résultat.
-     */
+    //Génère un rapport limité à un mois précis dans un fichier dédié.
     public void generateMonthlyReport(int month, int year, String path) throws FileIOException {
         File file = new File(path);
         ensureParentDirectory(file);
@@ -69,20 +53,14 @@ public class ReportExporter implements Exportable {
         }
     }
 
-    /**
-     * Affiche un rapport avec la même mise en page que l’export fichier.
-     * Concept : réutilisation du même format pour la sortie console.
-     */
+    //Affiche un rapport avec la même mise en page que l’export fichier.
     public void printToConsole(List<Expense> list) {
         PrintWriter writer = new PrintWriter(System.out);
         writeReport(list, writer);
         writer.flush();
     }
 
-    /**
-     * Écrit le corps du rapport avec en-tête, lignes et total.
-     * Concept : factorisation d’un algorithme de rendu commun.
-     */
+    //Écrit le corps du rapport avec en-tête, lignes et total.
     private void writeReport(List<Expense> expenses, PrintWriter writer) {
         List<Expense> safeExpenses = expenses == null ? new ArrayList<Expense>() : expenses;
         double total = 0.0;
@@ -102,10 +80,7 @@ public class ReportExporter implements Exportable {
         writer.println(String.format("TOTAL: %.2f MAD", total));
     }
 
-    /**
-     * Crée le dossier parent si l’utilisateur cible un chemin imbriqué.
-     * Concept : utilitaire I/O partagé par les méthodes d’export.
-     */
+    //Crée le dossier parent si l’utilisateur cible un chemin imbriqué.
     private void ensureParentDirectory(File file) {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
