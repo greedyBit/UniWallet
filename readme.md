@@ -233,13 +233,12 @@ java -cp out app.App
 
 ---
 
-## Crédits
+## Credits
 
-# - Ahrabar Ahmed monir
-# - Faiz Adnane
-# - Sbia Youness
-# - Telouani Amine
-# - Toukam Abderrahman
+> *élaboré par*
+> 
+> [@Ahrabar Ahmed monir](github-link) &nbsp;•&nbsp; [@Faiz Adnane](github-link) &nbsp;•&nbsp; [@Sbia Youness](github-link)
+> [@Telouani Amine](github-link) &nbsp;•&nbsp; [@Toukam Abderrahman](github-link)
 
 ---
 
