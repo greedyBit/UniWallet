@@ -11,6 +11,15 @@ Projet réalisé en réponse à la fiche projet POO développement d'une applica
 
 ---
 
+## Environnement de développement
+
+| Outil | Version / Détail |
+|-------|-----------------|
+| **Java** | JDK 14 |
+| **IDE** | IntelliJ IDEA · Visual Studio Code |
+
+---
+
 ## Architecture
 
 Le projet suit une architecture modulaire avec séparation claire des responsabilités :
@@ -39,7 +48,8 @@ src/
 │   └── FileManager.java
 ├── export/
 │   └── ReportExporter.java           ← implements Exportable
-└── Main.java
+└── app/
+    └── App.java                      ← Point d'entrée principal : [main]
 ```
 
 ---
@@ -178,6 +188,13 @@ src/
 - Champs : `-manager : ExpenseManager`
 - Méthodes : `ReportExporter(manager: ExpenseManager)`, `exportToFile(path: String)`, `formatRow(expense: Expense) : String`, `generateMonthlyReport(month: int, year: int, path: String)`, `printToConsole(list: List<Expense>)`, `writeReport(expenses: List<Expense>, writer: PrintWriter)`, `ensureParentDirectory(file: File)`
 
+### Point d'entrée (`app/`)
+
+**`App`** — classe principale contenant le `main`
+- Lance la boucle de navigation principale entre les différents modules.
+- Gère l'affichage console côte à côte (menu + logo ASCII).
+- Délègue chaque action aux méthodes de service et de persistance correspondantes.
+
 ---
 
 ## Fonctionnalités
@@ -193,6 +210,17 @@ src/
 
 ---
 
+## Lancer l'application
+
+```bash
+javac -d out src/**/*.java
+java -cp out app.App
+```
+
+> **Requis :** JDK 14 ou supérieur.
+
+---
+
 ## Répartition du travail
 
 | Membre | Couche | Fichiers |
@@ -201,16 +229,17 @@ src/
 | 2 | Interfaces & Exceptions | `Alertable`, `Exportable`, `Budget`, 4 exceptions |
 | 3 | Service | `ExpenseManager`, `Student` |
 | 4 | Persistance & Export | `FileManager`, `ReportExporter` |
-| 5 | Point d'entrée | `Main.java` |
+| 5 | Point d'entrée | `App.java` |
 
 ---
 
-## Lancer l'application
+## Crédits
 
-```bash
-javac -d out src/**/*.java
-java -cp out Main
-```
+# - Ahrabar Ahmed monir
+# - Faiz Adnane
+# - Sbia Youness
+# - Telouani Amine
+# - Toukam Abderrahman
 
 ---
 
