@@ -235,10 +235,13 @@ java -cp out app.App
 
 ## Credits
 
-> *élaboré par*
-> 
-> [@Ahrabar Ahmed monir](github-link) &nbsp;•&nbsp; [@Faiz Adnane](github-link) &nbsp;•&nbsp; [@Sbia Youness](github-link)
-> [@Telouani Amine](github-link) &nbsp;•&nbsp; [@Toukam Abderrahman](github-link)
+> *Elaboré par:*
+>
+> - **Ahrabar Ahmed mounir** — `@Ahmedahrabar-hub`
+> - **Faiz Adnane** — `@Mazicus`
+> - **Sbia Youness** — `@Lamprofony`
+> - **Telouani Amine** — `@atel12345`
+> - **Toukam Abderrahman** — `@beeOverflow`
 
 ---
 
