@@ -1,4 +1,5 @@
-# Student Budget Tracker
+# UniWallet
+### Student Budget Tracker
 
 Application console Java développée dans le cadre du cours de **Programmation Orientée Objet**.  
 Elle permet à un étudiant de suivre ses dépenses quotidiennes par catégorie, de définir des budgets mensuels, de recevoir des alertes en cas de dépassement, et d'exporter des rapports mensuels.
